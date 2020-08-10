@@ -1,0 +1,11 @@
+[package]
+name = "issuers"
+version = "0.1.0"
+authors = ["Anthony Huang <anthuang@umich.edu>"]
+edition = "2018"
+
+[dependencies]
+reqwest = { version = "0.10", features = ["json"] }
+serde = { version = "1.0.114", features = ["derive"] }
+tokio = { version = "0.2", features = ["full"] }
+chrono = { version = "0.4", features = ["serde"] }
