@@ -1,13 +1,16 @@
-use chrono::prelude::*;
+use color_eyre::eyre::Result;
 
 #[tokio::main]
-async fn main() -> Result<(), Box<dyn std::error::Error>> {
-    let issues = issuers::get_issues("nushell/nushell").await?;
+async fn main() -> Result<()> {
+    color_eyre::install()?;
+
+    let issues = issuers::get_issues(String::from("nushell/nushell")).await?;
     print!(
         "{:?}",
         issues
-            .created_after("2020-06-01T23:56:58Z".parse::<DateTime<Utc>>().unwrap())
+            .created_after(issuers::history::read_time()?)
             .with_tag("good first issue")
     );
+    issuers::history::write(issues)?;
     Ok(())
 }

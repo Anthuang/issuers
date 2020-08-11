@@ -6,6 +6,8 @@ edition = "2018"
 
 [dependencies]
 chrono = { version = "0.4", features = ["serde"] }
+color-eyre = "0.5"
 reqwest = { version = "0.10", features = ["json"] }
 serde = { version = "1.0.114", features = ["derive"] }
 tokio = { version = "0.2", features = ["full"] }
+toml = "0.5.6"

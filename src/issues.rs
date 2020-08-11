@@ -1,21 +1,22 @@
 use chrono::prelude::*;
-use serde::Deserialize;
+use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::fmt;
 
+#[derive(Deserialize, Serialize, Clone)]
 pub struct Issues {
-    repo: &'static str,
+    repo: String,
     issues: Vec<Issue>,
 }
 
 impl Issues {
-    pub fn new(repo: &'static str, issues: Vec<Issue>) -> Issues {
+    pub fn new(repo: String, issues: Vec<Issue>) -> Issues {
         Self { repo, issues }
     }
 
     pub fn with_tag(&self, tag: &str) -> Issues {
         Issues::new(
-            self.repo,
+            self.repo.clone(),
             self.issues
                 .iter()
                 .filter(|i| i.has_tag(tag))
@@ -26,7 +27,7 @@ impl Issues {
 
     pub fn created_after(&self, time: DateTime<Utc>) -> Issues {
         Issues::new(
-            self.repo,
+            self.repo.clone(),
             self.issues
                 .iter()
                 .filter(|i| i.created_at >= time)
@@ -38,6 +39,10 @@ impl Issues {
 
 impl fmt::Debug for Issues {
     fn fmt(&self, f: &mut fmt::Formatter) -> fmt::Result {
+        if self.issues.is_empty() {
+            return Ok(());
+        }
+
         writeln!(f, "{repo}:", repo = self.repo).expect("Print failed");
         for (i, issue) in self.issues.iter().enumerate() {
             writeln!(
@@ -53,9 +58,10 @@ impl fmt::Debug for Issues {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 pub struct Issue {
     title: String,
+    #[serde(rename = "html_url")]
     url: String,
     labels: Vec<Label>,
     created_at: DateTime<Utc>,
@@ -72,7 +78,7 @@ impl Issue {
     }
 }
 
-#[derive(Deserialize, Debug, Clone)]
+#[derive(Deserialize, Serialize, Debug, Clone)]
 struct Label {
     name: String,
 }

@@ -1,8 +1,13 @@
 use reqwest::header::USER_AGENT;
 
+mod errors;
+pub mod history;
 mod issues;
 
-pub async fn get_issues(repo: &'static str) -> Result<issues::Issues, Box<dyn std::error::Error>> {
+use errors::IssuesError;
+use issues::Issues;
+
+pub async fn get_issues(repo: String) -> Result<Issues, IssuesError> {
     let request_url = format!("https://api.github.com/repos/{repo}/issues", repo = repo);
     let client = reqwest::Client::new();
     let response = client
@@ -10,5 +15,6 @@ pub async fn get_issues(repo: &'static str) -> Result<issues::Issues, Box<dyn st
         .header(USER_AGENT, "issuers")
         .send()
         .await?;
-    Ok(issues::Issues::new(repo, response.json().await?))
+    let issues = Issues::new(repo, response.json().await?);
+    Ok(issues)
 }
