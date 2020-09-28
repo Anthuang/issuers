@@ -14,6 +14,10 @@ impl Issues {
         Self { repo, issues }
     }
 
+    pub fn is_empty(&self) -> bool {
+        self.issues.is_empty()
+    }
+
     pub fn with_tag(&self, tag: &str) -> Issues {
         Issues::new(
             self.repo.clone(),
