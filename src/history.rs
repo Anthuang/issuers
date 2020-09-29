@@ -1,4 +1,4 @@
-use crate::errors::IssuersError;
+use crate::errors::HistoryError;
 use crate::issues::Issues;
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
@@ -13,7 +13,7 @@ struct History {
     issues: Vec<Issues>,
 }
 
-pub fn read_time() -> Result<DateTime<Utc>, IssuersError> {
+pub fn read_time() -> Result<DateTime<Utc>, HistoryError> {
     // If history file does not exist, then use the Unix Epoch (all issues would
     // be considered new) and create the file.
     if fs::metadata(HISTORY_FILE).is_err() {
@@ -37,7 +37,7 @@ pub fn read_time() -> Result<DateTime<Utc>, IssuersError> {
     Ok(history.last_changed)
 }
 
-pub fn write(issues: Vec<Issues>) -> Result<(), IssuersError> {
+pub fn write(issues: Vec<Issues>) -> Result<(), HistoryError> {
     let history = History {
         last_changed: Utc::now(),
         issues,

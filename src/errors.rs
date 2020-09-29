@@ -4,64 +4,87 @@ use std::io;
 use toml::{de, ser};
 
 #[derive(Debug)]
-pub enum IssuersError {
+pub enum IssuesError {
     Request(reqwest::Error),
-    TomlSerialization(ser::Error),
-    TomlDeserialization(de::Error),
-    Fs(io::Error),
 }
 
-impl Error for IssuersError {
+impl Error for IssuesError {
     fn description(&self) -> &str {
         match *self {
-            IssuersError::Request(..) => "request failed",
-            IssuersError::TomlSerialization(..) => "toml serialization failed",
-            IssuersError::TomlDeserialization(..) => "toml deserialization failed",
-            IssuersError::Fs(..) => "filesystem operation failed",
+            IssuesError::Request(..) => "request failed",
         }
     }
 
     fn cause(&self) -> Option<&dyn Error> {
         match *self {
-            IssuersError::Request(ref e) => Some(e),
-            IssuersError::TomlSerialization(ref e) => Some(e),
-            IssuersError::TomlDeserialization(ref e) => Some(e),
-            IssuersError::Fs(ref e) => Some(e),
+            IssuesError::Request(ref e) => Some(e),
         }
     }
 }
 
-impl fmt::Display for IssuersError {
+impl fmt::Display for IssuesError {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         match *self {
-            IssuersError::Request(ref e) => write!(f, "{}", e),
-            IssuersError::TomlSerialization(ref e) => write!(f, "{}", e),
-            IssuersError::TomlDeserialization(ref e) => write!(f, "{}", e),
-            IssuersError::Fs(ref e) => write!(f, "{}", e),
+            IssuesError::Request(ref e) => write!(f, "{}", e),
         }
     }
 }
 
-impl From<reqwest::Error> for IssuersError {
+impl From<reqwest::Error> for IssuesError {
     fn from(e: reqwest::Error) -> Self {
-        IssuersError::Request(e)
+        IssuesError::Request(e)
     }
 }
 
-impl From<ser::Error> for IssuersError {
+#[derive(Debug)]
+pub enum HistoryError {
+    TomlSerialization(ser::Error),
+    TomlDeserialization(de::Error),
+    Fs(io::Error),
+}
+
+impl Error for HistoryError {
+    fn description(&self) -> &str {
+        match *self {
+            HistoryError::TomlSerialization(..) => "toml serialization failed",
+            HistoryError::TomlDeserialization(..) => "toml deserialization failed",
+            HistoryError::Fs(..) => "filesystem operation failed",
+        }
+    }
+
+    fn cause(&self) -> Option<&dyn Error> {
+        match *self {
+            HistoryError::TomlSerialization(ref e) => Some(e),
+            HistoryError::TomlDeserialization(ref e) => Some(e),
+            HistoryError::Fs(ref e) => Some(e),
+        }
+    }
+}
+
+impl fmt::Display for HistoryError {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        match *self {
+            HistoryError::TomlSerialization(ref e) => write!(f, "{}", e),
+            HistoryError::TomlDeserialization(ref e) => write!(f, "{}", e),
+            HistoryError::Fs(ref e) => write!(f, "{}", e),
+        }
+    }
+}
+
+impl From<ser::Error> for HistoryError {
     fn from(e: ser::Error) -> Self {
-        IssuersError::TomlSerialization(e)
+        HistoryError::TomlSerialization(e)
     }
 }
 
-impl From<de::Error> for IssuersError {
+impl From<de::Error> for HistoryError {
     fn from(e: de::Error) -> Self {
-        IssuersError::TomlDeserialization(e)
+        HistoryError::TomlDeserialization(e)
     }
 }
 
-impl From<io::Error> for IssuersError {
+impl From<io::Error> for HistoryError {
     fn from(e: io::Error) -> Self {
-        IssuersError::Fs(e)
+        HistoryError::Fs(e)
     }
 }

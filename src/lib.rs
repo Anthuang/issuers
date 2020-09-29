@@ -1,3 +1,4 @@
+use anyhow::Result;
 use reqwest::header::USER_AGENT;
 
 pub mod config;
@@ -6,10 +7,9 @@ pub mod history;
 mod issues;
 
 use config::get_repos;
-use errors::IssuersError;
 use issues::Issues;
 
-pub async fn get_issues() -> Result<Vec<Issues>, IssuersError> {
+pub async fn get_issues() -> Result<Vec<Issues>> {
     let mut result_issues = Vec::new();
     let repos = get_repos();
 
