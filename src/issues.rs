@@ -18,12 +18,12 @@ impl Issues {
         self.issues.is_empty()
     }
 
-    pub fn with_tag(&self, tag: &str) -> Issues {
+    pub fn with_tag(&self, tag: String) -> Issues {
         Issues::new(
             self.repo.clone(),
             self.issues
                 .iter()
-                .filter(|i| i.has_tag(tag))
+                .filter(|i| i.has_tag(tag.clone()))
                 .cloned()
                 .collect(),
         )
@@ -72,7 +72,7 @@ pub struct Issue {
 }
 
 impl Issue {
-    fn has_tag(&self, tag: &str) -> bool {
+    fn has_tag(&self, tag: String) -> bool {
         for label in self.labels.iter() {
             if label.name == tag {
                 return true;

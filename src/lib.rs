@@ -23,11 +23,7 @@ pub async fn get_issues() -> Result<Vec<Issues>> {
             .send()
             .await?;
         let issues = Issues::new(r.0, response.json().await?);
-        result_issues.push(
-            issues
-                .created_after(history::read_time()?)
-                .with_tag(r.1.as_str()),
-        );
+        result_issues.push(issues.created_after(history::read_time()?).with_tag(r.1));
     }
     Ok(result_issues)
 }
