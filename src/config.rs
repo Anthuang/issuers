@@ -4,7 +4,7 @@ use toml::Value;
 
 pub fn get_repos() -> Vec<(String, String)> {
     let mut result_vec = Vec::new();
-    let home = env::var("HOME").unwrap();
+    let home = env::var("HOME").expect("HOME env variable not set");
     let config_file = format!("{}/.issuers.toml", home);
     let file = fs::read(config_file).expect("Config file cannot be read");
     let config_toml = String::from_utf8_lossy(&file)
