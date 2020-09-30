@@ -1,0 +1,11 @@
+[nushell]
+repo = "nushell/nushell"
+tag = "good first issue"
+
+[tikv]
+repo = "tikv/tikv"
+tag = "difficulty/easy"
+
+[rustfmt]
+repo = "rust-lang/rustfmt"
+tag = "good first issue"
