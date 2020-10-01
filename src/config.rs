@@ -1,16 +1,10 @@
 use std::{env, fs};
 
+use crate::repo::Repo;
 use anyhow::Result;
-use serde::Deserialize;
 use toml::Value;
 
-#[derive(Debug, Deserialize)]
-pub struct Repo {
-    pub repo: String,
-    pub tag: String,
-}
-
-pub fn get_repos() -> Result<Vec<Repo>> {
+pub fn get_repos_from_config() -> Result<Vec<Repo>> {
     let mut result_vec = Vec::new();
     let home = env::var("HOME")?;
     let file_path = format!("{}/.issuers.toml", home);
