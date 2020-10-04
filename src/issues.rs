@@ -10,7 +10,7 @@ pub struct Issues {
 }
 
 impl Issues {
-    pub fn new(repo: String, issues: Vec<Issue>) -> Issues {
+    pub fn new(repo: String, issues: Vec<Issue>) -> Self {
         Self { repo, issues }
     }
 
@@ -18,8 +18,8 @@ impl Issues {
         self.issues.is_empty()
     }
 
-    pub fn created_after(&self, time: DateTime<Utc>) -> Issues {
-        Issues::new(
+    pub fn created_after(&self, time: DateTime<Utc>) -> Self {
+        Self::new(
             self.repo.clone(),
             self.issues
                 .iter()

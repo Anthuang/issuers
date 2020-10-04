@@ -1,49 +1,68 @@
 use crate::errors::HistoryError;
-use crate::issues::Issues;
+use crate::repo::Repo;
 use chrono::prelude::*;
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 use std::fs;
 use toml::Value;
 
 const HISTORY_FILE: &str = "/tmp/issuers_history";
 
 #[derive(Serialize, Deserialize)]
-struct History {
-    last_changed: DateTime<Utc>,
-    issues: Vec<Issues>,
+pub struct History {
+    pub last_changed: DateTime<Utc>,
+    repos: Vec<Repo>,
 }
 
-pub fn read_time() -> Result<DateTime<Utc>, HistoryError> {
-    // If history file does not exist, then use the Unix Epoch (all issues would
-    // be considered new) and create the file.
-    if fs::metadata(HISTORY_FILE).is_err() {
-        fs::File::create(HISTORY_FILE)?;
+impl Default for History {
+    fn default() -> Self {
+        History::new()
+    }
+}
 
-        let ts = Utc.timestamp(0, 0);
-        let history = History {
-            last_changed: ts,
-            issues: Vec::new(),
-        };
+impl History {
+    pub fn new() -> Self {
+        // If history file does not exist, then use the Unix Epoch (all issues
+        // would be considered new) and create the file.
+        if fs::metadata(HISTORY_FILE).is_err() {
+            return Self {
+                last_changed: Utc.timestamp(0, 0),
+                repos: Vec::new(),
+            };
+        }
 
-        let toml = toml::to_string(&Value::try_from(&history)?)?;
-        fs::write(HISTORY_FILE, toml)?;
-        return Ok(ts);
+        let toml: String =
+            String::from_utf8_lossy(&fs::read(HISTORY_FILE).expect("Could not read history file"))
+                .parse()
+                .expect("String parse failed");
+        toml::from_str(&toml).expect("Could not parse toml file")
     }
 
-    let toml: String = String::from_utf8_lossy(&fs::read(HISTORY_FILE)?)
-        .parse()
-        .expect("String parse failed");
-    let history: History = toml::from_str(&toml)?;
-    Ok(history.last_changed)
-}
+    /// Updates the passed in repos read from the config file. This attaches
+    /// information to the repos from the history file, such as etag.
+    pub fn update_repos(&self, repos: &mut Vec<Repo>) -> Result<(), HistoryError> {
+        if self.repos.is_empty() {
+            return Ok(());
+        }
 
-pub fn write(issues: Vec<Issues>) -> Result<(), HistoryError> {
-    let history = History {
-        last_changed: Utc::now(),
-        issues,
-    };
+        let mut repo_map = HashMap::new();
+        for r in self.repos.iter() {
+            repo_map.insert(r.repo.clone(), r.etag.clone());
+        }
+        for r in repos {
+            if repo_map.contains_key(r.repo.as_str()) {
+                r.etag = repo_map[&r.repo].clone();
+            }
+        }
+        Ok(())
+    }
 
-    let toml = toml::to_string(&Value::try_from(&history)?)?;
-    fs::write(HISTORY_FILE, toml)?;
-    Ok(())
+    pub fn write(&mut self, repos: Vec<Repo>) -> Result<(), HistoryError> {
+        self.last_changed = Utc::now();
+        self.repos = repos;
+
+        let toml = toml::to_string(&Value::try_from(self)?)?;
+        fs::write(HISTORY_FILE, toml)?;
+        Ok(())
+    }
 }

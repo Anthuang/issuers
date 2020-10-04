@@ -20,6 +20,6 @@ async fn main() -> Result<()> {
             println!("{:?}", i);
         }
     }
-    issuers::history::write(issues)?;
+
     Ok(())
 }

@@ -20,7 +20,16 @@ pub fn get_repos_from_config() -> Result<Vec<Repo>> {
         .as_table()
         .expect("Config formatted incorrectly");
     for k in config_table.iter() {
-        let repo = k.1.clone().try_into::<Repo>()?;
+        let repo = Repo::new(
+            k.1["repo"]
+                .as_str()
+                .expect("Repo must exist in repo config")
+                .to_string(),
+            k.1["tag"]
+                .as_str()
+                .expect("Repo must exist in repo config")
+                .to_string(),
+        );
         result_vec.push(repo);
     }
     Ok(result_vec)
