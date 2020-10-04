@@ -10,5 +10,5 @@ reqwest = { version = "0.10", features = ["json"] }
 serde = { version = "1.0.114", features = ["derive"] }
 tokio = { version = "0.2", features = ["full"] }
 toml = "0.5.6"
-anyhow = "1.0.32"
 structopt = "0.3.18"
+color-eyre = "0.5.5"

@@ -1,4 +1,4 @@
-use anyhow::Result;
+use color_eyre::eyre::Result;
 use structopt::StructOpt;
 
 #[derive(StructOpt, Debug)]
@@ -11,6 +11,8 @@ struct Opt {
 
 #[tokio::main]
 async fn main() -> Result<()> {
+    color_eyre::install()?;
+
     let opt = Opt::from_args();
     let issues = issuers::get_issues(opt.days).await?;
     for i in issues.iter() {

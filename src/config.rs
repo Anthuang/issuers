@@ -1,7 +1,7 @@
 use std::{env, fs};
 
 use crate::repo::Repo;
-use anyhow::Result;
+use color_eyre::eyre::Result;
 use toml::Value;
 
 pub fn get_repos_from_config() -> Result<Vec<Repo>> {

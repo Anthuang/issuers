@@ -1,5 +1,5 @@
 use crate::issues::Issue;
-use anyhow::Result;
+use color_eyre::eyre::Result;
 use reqwest::header::USER_AGENT;
 use serde::Deserialize;
 

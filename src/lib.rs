@@ -1,5 +1,3 @@
-use anyhow::Result;
-
 pub mod config;
 mod errors;
 pub mod history;
@@ -8,6 +6,7 @@ mod repo;
 
 use chrono::prelude::*;
 use chrono::Duration;
+use color_eyre::eyre::Result;
 use config::get_repos_from_config;
 use issues::Issues;
 use std::ops::Sub;
