@@ -14,7 +14,10 @@ async fn main() -> Result<()> {
     color_eyre::install()?;
 
     let opt = Opt::from_args();
-    let issues = issuers::get_issues(opt.days).await?;
+    let issues = match opt.days {
+        Some(days) => issuers::get_issues_by_days(days).await?,
+        None => issuers::get_issues().await?,
+    };
     for i in issues.iter() {
         if !i.is_empty() {
             println!("{:?}", i);
