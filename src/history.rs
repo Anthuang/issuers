@@ -8,6 +8,10 @@ use toml::Value;
 
 const HISTORY_FILE: &str = "/tmp/issuers_history";
 
+/// Information from past Issuers runs.
+///
+/// History helps to make Issuers runs more efficient. For example, Issuers can
+/// return only new issues since the last time Issuers was run.
 #[derive(Serialize, Deserialize)]
 pub struct History {
     pub last_changed: DateTime<Utc>,
@@ -21,6 +25,9 @@ impl Default for History {
 }
 
 impl History {
+    /// Create a new `History` based on the stored history file.
+    ///
+    /// Returns a default `History` if no history file is found.
     pub fn new() -> Self {
         // If history file does not exist, then use the Unix Epoch (all issues
         // would be considered new) and create the file.
@@ -38,8 +45,10 @@ impl History {
         toml::from_str(&toml).expect("Could not parse toml file")
     }
 
-    /// Updates the passed in repos read from the config file. This attaches
-    /// information to the repos from the history file, such as etag.
+    /// Updates the passed in repos based on the Issuers history.
+    ///
+    /// This attaches information to the repos from the history file, such as
+    /// etags.
     pub fn update_repos(&self, repos: &mut Vec<Repo>) -> Result<(), HistoryError> {
         if self.repos.is_empty() {
             return Ok(());
@@ -57,6 +66,7 @@ impl History {
         Ok(())
     }
 
+    /// Updates the history file.
     pub fn write(&mut self, repos: Vec<Repo>) -> Result<(), HistoryError> {
         self.last_changed = Utc::now();
         self.repos = repos;

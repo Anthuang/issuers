@@ -1,6 +1,6 @@
-pub mod config;
+mod config;
 mod errors;
-pub mod history;
+mod history;
 mod issues;
 mod repo;
 

@@ -3,6 +3,7 @@ use serde::{Deserialize, Serialize};
 use std::clone::Clone;
 use std::fmt;
 
+/// A respository's URL and its issues.
 #[derive(Deserialize, Serialize, Clone, PartialEq)]
 pub struct Issues {
     repo: String,
@@ -51,6 +52,10 @@ impl fmt::Debug for Issues {
     }
 }
 
+/// Representation of a Github issue.
+///
+/// Used to deserialize the Github Issues API response. See
+/// https://developer.github.com/v3/issues.
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq)]
 pub struct Issue {
     title: String,
@@ -60,6 +65,10 @@ pub struct Issue {
     created_at: DateTime<Utc>,
 }
 
+/// Representation of a Github tag.
+///
+/// Used to deserialize the Github Issues API response. See
+/// https://developer.github.com/v3/issues.
 #[derive(Deserialize, Serialize, Debug, Clone, PartialEq)]
 struct Label {
     name: String,
