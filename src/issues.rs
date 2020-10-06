@@ -80,8 +80,8 @@ mod tests {
 
     fn issue_with_timestamp(sec: i64) -> Issue {
         Issue {
-            title: "".to_string(),
-            url: "".to_string(),
+            title: String::new(),
+            url: String::new(),
             labels: Vec::new(),
             created_at: Utc.timestamp(sec, 0),
         }

@@ -15,7 +15,7 @@ impl Repo {
         Self {
             repo,
             tag,
-            etag: "".to_string(),
+            etag: String::new(),
         }
     }
 
