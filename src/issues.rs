@@ -41,7 +41,7 @@ impl fmt::Debug for Issues {
             return Ok(());
         }
 
-        writeln!(f, "{repo}:", repo = self.repo).expect("Print failed");
+        writeln!(f, "{repo}:", repo = self.repo)?;
         for (i, issue) in self.issues.iter().enumerate() {
             writeln!(
                 f,
@@ -49,9 +49,9 @@ impl fmt::Debug for Issues {
                 index = i + 1,
                 title = issue.title,
                 url = issue.url
-            )
-            .expect("Print failed");
+            )?;
         }
+
         Ok(())
     }
 }

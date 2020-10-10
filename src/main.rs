@@ -18,9 +18,12 @@ async fn main() -> Result<()> {
         Some(days) => issuers::get_issues_by_days(days).await?,
         None => issuers::get_issues().await?,
     };
-    for i in issues.iter() {
-        if !i.is_empty() {
-            println!("{:?}", i);
+    for (i, issue) in issues.iter().enumerate() {
+        if !issue.is_empty() {
+            print!("{:?}", issue);
+            if i != issues.len() - 1 {
+                println!();
+            }
         }
     }
 
