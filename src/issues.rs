@@ -41,7 +41,7 @@ impl fmt::Debug for Issues {
         for (i, issue) in self.issues.iter().enumerate() {
             writeln!(
                 f,
-                "{index}: {title}: {url}",
+                "{index}: \"{title}\": {url}",
                 index = i + 1,
                 title = issue.title,
                 url = issue.url
