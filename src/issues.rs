@@ -11,14 +11,18 @@ pub struct Issues {
 }
 
 impl Issues {
+    /// Creates a new `Issues`.
     pub fn new(repo: String, issues: Vec<Issue>) -> Self {
         Self { repo, issues }
     }
 
+    /// Checks if there are no issues.
     pub fn is_empty(&self) -> bool {
         self.issues.is_empty()
     }
 
+    /// Returns a new instance of `Issues` with only issues created after the
+    /// specified time.
     pub fn created_after(&self, time: DateTime<Utc>) -> Self {
         Self::new(
             self.repo.clone(),

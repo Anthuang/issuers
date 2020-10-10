@@ -4,6 +4,7 @@ use crate::repo::Repo;
 use color_eyre::eyre::Result;
 use toml::Value;
 
+/// Load repository information from the config file.
 pub fn get_repos_from_config() -> Result<Vec<Repo>> {
     let mut result_vec = Vec::new();
     let home = env::var("HOME")?;

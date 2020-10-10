@@ -25,7 +25,7 @@ impl Default for History {
 }
 
 impl History {
-    /// Create a new `History` based on the stored history file.
+    /// Creates a new `History` based on the stored history file.
     ///
     /// Returns a default `History` if no history file is found.
     pub fn new() -> Self {

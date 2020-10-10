@@ -3,6 +3,7 @@ use color_eyre::eyre::Result;
 use reqwest::header::{ETAG, IF_NONE_MATCH, USER_AGENT};
 use serde::{Deserialize, Serialize};
 
+/// Information for a repository used for API calls.
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Repo {
     pub repo: String,
@@ -11,6 +12,7 @@ pub struct Repo {
 }
 
 impl Repo {
+    /// Creates a new `Repo`.
     pub fn new(repo: String, tag: String) -> Self {
         Self {
             repo,
@@ -19,6 +21,11 @@ impl Repo {
         }
     }
 
+    /// Gets the repository's issues.
+    ///
+    /// Uses the Github Issues API. See https://developer.github.com/v3/issues.
+    /// The etag from the response is used to avoid repeated information in
+    /// future calls.
     pub async fn issues(&mut self) -> Result<Vec<Issue>> {
         let request_url = format!(
             "https://api.github.com/repos/{repo}/issues",
